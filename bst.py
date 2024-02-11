@@ -48,33 +48,41 @@ def insert(root: Node, key: int, value: int) -> Node:
 # For the tree rooted at root and the key given, delete the key.
 # When replacement is necessary use the inorder successor.
 def delete(root: Node, key: int) -> Node:
+    if root is None:
+        return None
+    
     parent, child = __find_node(None, root, key)
     
-    if child is not None:
-        if child.leftchild is None and child.rightchild is None:
-            __replace_node(root, parent, child, None)
-        elif child.leftchild is not None and child.rightchild is None:
-            __replace_node(root, parent, child, child.leftchild)
-        elif child.rightchild is not None and child.leftchild is None:
-            __replace_node(root, parent, child, child.rightchild)
+    if child is None:
+        return root
+    
+    smallestNode = __find_smallest_node(child.rightchild)
+    if child is root:
+        if smallestNode is None:
+            root = root.leftchild
         else:
-            newValue = __find_smallest_node(child.rightchild).key
-            delete(child, newValue)
-            child.key = newValue
+            root.key = smallestNode.key
+            root.rightchild = delete(root.rightchild, smallestNode.key)
+    else:
+        if child.leftchild is None and child.rightchild is None:
+            __replace_node(parent, child, None)
+        elif smallestNode is None:
+            __replace_node(parent, child, child.leftchild)
+        else:
+            child.key = smallestNode.key
+            child.rightchild = delete(child.rightchild, smallestNode.key)
     
     return root
 
-def __replace_node(root: Node, parent: Node, child: Node,  node: Node):
-    if parent is None:
-        root = node
-    elif parent.key > child.key:
+def __replace_node(parent: Node, child: Node,  node: Node):
+    if parent.key > child.key:
         parent.leftchild = node
     else:
         parent.rightchild = node
 
 # Returns the smallest node (the left most node)
 def __find_smallest_node (root: Node):
-    if root.leftchild is not None:
+    if root is not None and root.leftchild is not None:
         return __find_smallest_node(root.leftchild)
     else:
         return root
@@ -157,6 +165,15 @@ def print_breathfirst(root: Node):
             queue.append(temp_node.rightchild)
 
 '''
+
+tree2 = insert(None, 9, 1688)
+tree2 = insert(tree2, 8, 1473)
+tree2 = insert(tree2, 5, 1713)
+tree2 = delete(tree2, 9)
+print_breathfirst(tree2)
+
+print("------TREE 1-------")
+
 tree1 = Node(8, 800, None, None)
 tree1 = insert(tree1, 3, 300)
 tree1 = insert(tree1, 10, 200)
@@ -166,11 +183,11 @@ tree1 = insert(tree1, 14, 1400)
 tree1 = insert(tree1, 4, 40)
 tree1 = insert(tree1, 7, 700)
 tree1 = insert(tree1, 13, 1300)
-print_inorder(tree1)
-print(search(tree1, 4))
-tree1 = restructure(tree1)
+#print_inorder(tree1)
+#print(search(tree1, 4))
+#tree1 = restructure(tree1)
 print_breathfirst(tree1)
-
+print("---")
 tree1 = delete(tree1, 3)
 print_breathfirst(tree1)
 print("---")
@@ -185,6 +202,7 @@ print_breathfirst(tree1)
 print("---")
 print("Finished")
 '''
+
 '''
 Notes for trees:
 
