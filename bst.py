@@ -56,20 +56,27 @@ def delete(root: Node, key: int) -> Node:
     if child is None:
         return root
     
-    smallestNode = __find_smallest_node(child.rightchild)
     if child is root:
-        if smallestNode is None:
+        if root.leftchild is None and root.rightchild is None:
+            root = None
+        elif root.leftchild is None:
+            root = root.rightchild
+        elif root.rightchild is None:
             root = root.leftchild
         else:
+            smallestNode = __find_smallest_node(child.rightchild)
             root.key = smallestNode.key
             root.value = smallestNode.value
             root.rightchild = delete(root.rightchild, smallestNode.key)
     else:
         if child.leftchild is None and child.rightchild is None:
             __replace_node(parent, child, None)
-        elif smallestNode is None:
+        elif child.leftchild is None:
+            __replace_node(parent, child, child.rightchild)
+        elif child.rightchild is None:
             __replace_node(parent, child, child.leftchild)
         else:
+            smallestNode = __find_smallest_node(child.rightchild)
             child.key = smallestNode.key
             child.value = smallestNode.value
             child.rightchild = delete(child.rightchild, smallestNode.key)
