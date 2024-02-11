@@ -156,7 +156,7 @@ def print_breathfirst(root: Node):
         if temp_node.rightchild is not None:
             queue.append(temp_node.rightchild)
 
-
+'''
 tree1 = Node(8, 800, None, None)
 tree1 = insert(tree1, 3, 300)
 tree1 = insert(tree1, 10, 200)
@@ -170,7 +170,7 @@ print_inorder(tree1)
 print(search(tree1, 4))
 tree1 = restructure(tree1)
 print_breathfirst(tree1)
-'''
+
 tree1 = delete(tree1, 3)
 print_breathfirst(tree1)
 print("---")
