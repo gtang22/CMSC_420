@@ -62,6 +62,7 @@ def delete(root: Node, key: int) -> Node:
             root = root.leftchild
         else:
             root.key = smallestNode.key
+            root.value = smallestNode.value
             root.rightchild = delete(root.rightchild, smallestNode.key)
     else:
         if child.leftchild is None and child.rightchild is None:
@@ -70,6 +71,7 @@ def delete(root: Node, key: int) -> Node:
             __replace_node(parent, child, child.leftchild)
         else:
             child.key = smallestNode.key
+            child.value = smallestNode.value
             child.rightchild = delete(child.rightchild, smallestNode.key)
     
     return root
