@@ -142,7 +142,7 @@ def _restructure_helper(list, start_index, end_index):
     elif start_index == end_index:
         return list[start_index]
     else:
-        middle = (end_index + start_index)//2
+        middle = (end_index + start_index + 1)//2
         newroot = list[middle]
         newroot.leftchild = _restructure_helper(list, start_index, middle - 1)
         newroot.rightchild = _restructure_helper(list, middle + 1, end_index)
