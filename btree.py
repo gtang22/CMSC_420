@@ -416,7 +416,8 @@ class Btree():
         index = 0
         for k in node.keys:
             if k == key:
-                list.append(k)
+                if node.is_root():
+                    list.append(k)
                 list.append(node.values[index])
                 return list
             elif k > key:
