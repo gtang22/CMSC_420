@@ -364,6 +364,7 @@ class Btree():
             right_node = node.split(self.m)
             median_key = node.keys.pop()
             median_value = node.values.pop()
+            node.leaf_sync()
             
             if not node.is_root():
                 self._insert_helper(node.parent, median_key, median_value, right_node)
@@ -430,4 +431,3 @@ class Btree():
             list = self._search_helper(node.children[index], key, list)
             
         return list
-
