@@ -244,7 +244,8 @@ class Node():
         leftsib.keys.extend(self.keys)
         leftsib.values.extend(self.values)
         for child in self.children:
-            child.parent = leftsib
+            if child is not None:
+                child.parent = leftsib
         leftsib.children.extend(self.children)
         
         # Remove self from parent's children 
@@ -275,7 +276,8 @@ class Node():
         self.keys.extend(rightsib.keys)
         self.values.extend(rightsib.values)
         for child in rightsib.children:
-            child.parent = self
+            if child is not None:
+                child.parent = self
         self.children.extend(rightsib.children)
         
         # Remove self from parent's children 
@@ -432,4 +434,3 @@ class Btree():
             list = self._search_helper(node.children[index], key, list)
             
         return list
-
