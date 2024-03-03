@@ -435,8 +435,6 @@ class Btree():
         index = 0
         for k in node.keys:
             if k == key:
-                if not node.is_root():
-                    list.append(k)
                 list.append(node.values[index])
                 return list
             elif k > key:
@@ -451,4 +449,3 @@ class Btree():
             list = self._search_helper(node.children[index], key, list)
             
         return list
-
