@@ -418,8 +418,18 @@ class Btree():
     # Search
     def search(self,key) -> str:
         if self.root is None:
-            return []
-        return self._search_helper(self.root, key, [])
+            return ""
+        result = self._search_helper(self.root, key, [])
+        final = "["
+        for i in range(0, len(result)):
+            if i != len(result) - 1:
+                final += str(result[i])
+                final += ", "
+            else:
+                final += '"' + str(result[i]) + '"'
+                   
+        final += "]"
+        return final
     
     def _search_helper(self, node: Node, key: int, list) -> List:
         index = 0
@@ -430,13 +440,13 @@ class Btree():
                 list.append(node.values[index])
                 return list
             elif k > key:
-                if len(node.children) > index:
+                if not node.is_leaf() and len(node.children) > index:
                     list.append(index)
                     list = self._search_helper(node.children[index], key, list)
-                else:
-                    return list
+
+                return list
             index += 1
-        if key > node.keys[index - 1]:
+        if  not node.is_leaf() and key > node.keys[index - 1]:
             list.append(index)
             list = self._search_helper(node.children[index], key, list)
             
