@@ -199,9 +199,9 @@ class Node():
         return not self.is_overfull(m)
      
     def rotate_to_right(self, index : int , m : int):
-        if not self.is_overfull(m) or self.is_root() or index >= len(self.parent.children):
+        if not self.is_overfull(m) or self.is_root() or index >= len(self.parent.children) - 1:
             return False
-        rightsib = self.parent.children[index]
+        rightsib = self.parent.children[index + 1]
         min = (len(rightsib.keys) + len(self.keys) + 1)//2
         
         while len(self.keys) > min:
@@ -431,3 +431,4 @@ class Btree():
             list = self._search_helper(node.children[index], key, list)
             
         return list
+
