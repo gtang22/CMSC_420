@@ -97,7 +97,7 @@ class Node():
         return False
     
     def is_underfull(self, m: int) -> bool:
-        if len(self.keys) < m//2 - 1:
+        if len(self.keys) < (m - 1)//2:
             return True
         return False
     
@@ -449,4 +449,3 @@ class Btree():
             list = self._search_helper(node.children[index], key, list)
             
         return list
-
