@@ -59,7 +59,10 @@ class Node():
             child = self.children.pop()
             child.parent = larger_node
             larger_node.children.insert(0, child)
-                
+    
+        larger_node.leaf_sync()
+        self.leaf_sync()
+                   
         return larger_node
     
     def is_root(self) -> bool:
@@ -67,10 +70,26 @@ class Node():
             return True
         return False
     
+    def leaf_sync(self):
+        if not self.is_leaf():
+            return
+        if self.children is None:
+            self.children = []
+        
+        while len(self.children) > len(self.keys) + 1:
+            self.children.pop() 
+        
+        while len(self.children) <= len(self.keys):
+            self.children.append(None)   
+        
     def is_leaf(self) -> bool:
         if self.children is None or len(self.children) == 0:
             return True
-        return False
+        
+        for child in self.children:
+            if child is not None:
+                return False
+        return True
     
     def is_overfull(self, m: int ) -> bool:
         if len(self.keys) >= m:
@@ -115,6 +134,9 @@ class Node():
                 child.parent = self
                 self.children.insert(0, child)
                 
+        leftsib.leaf_sync()
+        self.leaf_sync()
+        
         return not self.is_underfull(m)
 
     def rotate_from_right(self, index : int, m : int):
@@ -143,6 +165,9 @@ class Node():
                 child.parent = self
                 self.children.insert(len(self.children), child)
         
+        rightsib.leaf_sync()
+        self.leaf_sync()
+        
         return not self.is_underfull(m)
         
     def rotate_to_left(self, index : int , m : int):
@@ -167,6 +192,9 @@ class Node():
                 child = self.children.pop(0)
                 child.parent = leftsib
                 leftsib.children.append(child)
+        
+        leftsib.leaf_sync()
+        self.leaf_sync()
                 
         return not self.is_overfull(m)
      
@@ -192,6 +220,9 @@ class Node():
                 child = self.children.pop()
                 child.parent = rightsib
                 rightsib.children.insert(0, child)
+        
+        rightsib.leaf_sync()
+        self.leaf_sync()
                 
         return not self.is_overfull(m)   
           
@@ -222,6 +253,9 @@ class Node():
         # Removes parent key and value 
         self.parent.keys.pop(index - 1)
         self.parent.values.pop(index - 1)
+        
+        leftsib.leaf_sync()
+    
         return True
         
     def merge_with_right(self, index : int, m : int):
@@ -250,6 +284,8 @@ class Node():
         # Removes parent key and value 
         self.parent.keys.pop(index)
         self.parent.values.pop(index)
+        
+        self.leaf_sync()
         
         return True
     
@@ -295,6 +331,7 @@ class Btree():
     def insert(self, key: int, value: str):
         if self.root is None:
             self.root = Node([key], [value], [], None)
+            self.root.leaf_sync()
         else:
             node = self.root.find_node(key)
             self._insert_helper(node, key, value, None)
@@ -315,6 +352,8 @@ class Btree():
             if right_child is not None:
                 node.children.insert(index + 1, right_child)
     
+        node.leaf_sync()
+        
         if not node.is_root():
             tempIndex = node.parent.children.index(node)
             resultval = node.rotate_to_left(tempIndex, self.m)
@@ -349,6 +388,7 @@ class Btree():
         if node.is_leaf():
             node.keys.pop(index)
             node.values.pop(index)
+            node.leaf_sync()
             node.handle_underfull(self.m)      
             if len(self.root.keys) == 0:
                 if len(self.root.children) > 0:
@@ -391,33 +431,3 @@ class Btree():
             
         return list
 
-#b_tree = Btree(3, None)
-#b_tree.insert(6, "6")
-#b_tree.insert(5, "5")
-#b_tree.insert(9, "9")
-#b_tree.insert(10, "10")
-#b_tree.insert(11, "11")
-#b_tree.insert(8, "8")
-#b_tree.insert(7, "7")
-#b_tree.insert(1, "1")
-#b_tree.insert(2, "2")
-#b_tree.insert(3, "3")
-#b_tree.insert(4, "4")
-###print(b_tree.dump())
-###print("----------")
-###print(b_tree.search(11))
-#print("----------")
-
-#b_tree.delete(11)
-#b_tree.delete(9)
-#b_tree.delete(1)
-#b_tree.delete(6)
-#b_tree.delete(4)
-#b_tree.delete(5)
-#b_tree.delete(3)
-#b_tree.delete(2)
-#b_tree.delete(10)
-#b_tree.delete(7)
-#b_tree.delete(8)
-
-#print(b_tree.dump())
