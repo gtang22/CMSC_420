@@ -107,6 +107,13 @@ class Node():
         else:
             newNode = self.children[len(self.children) - 1]
             return newNode.find_biggest_keyValue()
+    
+    def find_smallest_keyValue(self):
+        if self.is_leaf():
+            return (self.keys[0], self.values[0])
+        else:
+            newNode = self.children[0]
+            return newNode.find_smallest_keyValue()
         
     def rotate_from_left(self, index : int , m : int):
         if not self.is_underfull(m) or self.is_root() or index <= 0:
@@ -400,12 +407,12 @@ class Btree():
                 else:
                     self.root = None        
         else:
-            leftChild = node.children[index]
-            maxKey, maxValue = leftChild.find_biggest_keyValue()
-            node.keys[index] = maxKey
-            node.values[index] = maxValue 
-            newNode= leftChild.find_node(maxKey)
-            self._delete_helper(newNode, maxKey) 
+            rightChild = node.children[index + 1]
+            minKey, minValue = rightChild.find_smallest_keyValue()
+            node.keys[index] = minKey
+            node.values[index] = minValue
+            newNode= rightChild.find_node(minKey)
+            self._delete_helper(newNode, minKey) 
                 
 
     # Search
@@ -434,3 +441,4 @@ class Btree():
             list = self._search_helper(node.children[index], key, list)
             
         return list
+
