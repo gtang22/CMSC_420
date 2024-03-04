@@ -121,7 +121,7 @@ class Node():
         
         leftsib = self.parent.children[index - 1]
         half = (len(leftsib.keys) + len(self.keys))//2
-        if half < m//2:
+        if half < (m - 1)//2:
             return False
         
         while len(self.keys) < half and not leftsib.is_underfull(m):
@@ -152,7 +152,7 @@ class Node():
         
         rightsib = self.parent.children[index + 1]
         half = (len(rightsib.keys) + len(self.keys))//2
-        if half < m//2:
+        if half < (m - 1)//2:
             return False
         
         while len(self.keys) < half and not rightsib.is_underfull(m):
