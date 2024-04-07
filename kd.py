@@ -256,11 +256,11 @@ class KDtree():
                 rightboundingbox = self._get_bounding_box(node.rightchild)
                 
                 if self._distance_to_bounding_box(point, leftboundingbox) < self._distance_to_bounding_box(point, rightboundingbox):
-                    leaveschecked += self._visit_child(k, point, knnlist, knndistancelist, node.leftchild, leaveschecked)
-                    leaveschecked += self._visit_child(k, point, knnlist, knndistancelist, node.rightchild, leaveschecked)
+                    leaveschecked = self._visit_child(k, point, knnlist, knndistancelist, node.leftchild, leaveschecked)
+                    leaveschecked = self._visit_child(k, point, knnlist, knndistancelist, node.rightchild, leaveschecked)
                 else:
-                    leaveschecked += self._visit_child(k, point, knnlist, knndistancelist, node.rightchild, leaveschecked)
-                    leaveschecked += self._visit_child(k, point, knnlist, knndistancelist, node.leftchild, leaveschecked)
+                    leaveschecked = self._visit_child(k, point, knnlist, knndistancelist, node.rightchild, leaveschecked)
+                    leaveschecked = self._visit_child(k, point, knnlist, knndistancelist, node.leftchild, leaveschecked)
             elif node.leftchild is not None:
                 leaveschecked = self._visit_child(k, point, knnlist, knndistancelist, node.leftchild, leaveschecked)
             elif node.rightchild is not None:
@@ -270,11 +270,11 @@ class KDtree():
     def _visit_child(self, k: int, point:tuple[int], knnlist: list, knndistancelist: list, child: NodeInternal | NodeLeaf, 
                     leaveschecked: int) -> int:
         if len(knnlist) < k:
-            leaveschecked += self._knn_helper(k, point, knnlist, knndistancelist, child, leaveschecked)
+            leaveschecked = self._knn_helper(k, point, knnlist, knndistancelist, child, leaveschecked)
         else:
             boundingbox = self._get_bounding_box(child)
             if self._distance_to_bounding_box(point, boundingbox) < knndistancelist[self._find_largest_index(knndistancelist)]:
-                leaveschecked += self._knn_helper(k, point, knnlist, knndistancelist, child, leaveschecked)
+                leaveschecked = self._knn_helper(k, point, knnlist, knndistancelist, child, leaveschecked)
         
         return leaveschecked
             
@@ -364,5 +364,11 @@ kdTree.delete((17, 0, 2))
 
 kdTree2.delete((16, 19, 18))
 '''
+
+kdTree2 = KDtree("spread", 2, 4)
+kdTree2.insert((8, 19), "ZTY")
+
+
+print(kdTree2.knn(1, (13, 1, 7, 6)))
 
 
