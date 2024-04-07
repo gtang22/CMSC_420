@@ -119,7 +119,7 @@ class KDtree():
                 if self.m%2 == 0:
                     splitingIndexValue = float(curNode.data[half].coords[splitingIndex])
                 else:
-                    splitingIndexValue = curNode.data[half].coords[splitingIndex] + curNode.data[half + 1].coords[splitingIndex]
+                    splitingIndexValue = curNode.data[half].coords[splitingIndex] + curNode.data[half - 1].coords[splitingIndex]
                     splitingIndexValue = splitingIndexValue/2
                     
                 # split with the index and make new Node 
