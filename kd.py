@@ -273,7 +273,7 @@ class KDtree():
             leaveschecked = self._knn_helper(k, point, knnlist, knndistancelist, child, leaveschecked)
         else:
             boundingbox = self._get_bounding_box(child)
-            if self._distance_to_bounding_box(point, boundingbox) < knndistancelist[self._find_largest_index(knndistancelist)]:
+            if self._distance_to_bounding_box(point, boundingbox) <= knndistancelist[self._find_largest_index(knndistancelist)]:
                 leaveschecked = self._knn_helper(k, point, knnlist, knndistancelist, child, leaveschecked)
         
         return leaveschecked
@@ -364,6 +364,5 @@ kdTree.delete((17, 0, 2))
 
 kdTree2.delete((16, 19, 18))
 '''
-
 
 
