@@ -115,7 +115,7 @@ class KDtree():
                 # Sort the entire datum list
                 self._sort_node_data(curNode, splitingIndex)
                 # get the spliting value 
-                half = self.m//2
+                half = (self.m + 1)//2
                 if self.m%2 == 0:
                     splitingIndexValue = float(curNode.data[half].coords[splitingIndex])
                 else:
