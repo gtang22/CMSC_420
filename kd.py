@@ -266,6 +266,7 @@ class KDtree():
                 leaveschecked = self._visit_child(k, point, knnlist, knndistancelist, node.leftchild, leaveschecked)
             elif node.rightchild is not None:
                 leaveschecked = self._visit_child(k, point, knnlist, knndistancelist, node.rightchild, leaveschecked)        
+            return leaveschecked
     
     def _visit_child(self, k: int, point:tuple[int], knnlist: list, knndistancelist: list, child: NodeInternal | NodeLeaf, 
                     leaveschecked: int) -> int:
