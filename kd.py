@@ -178,10 +178,9 @@ class KDtree():
     # The Datum with the given point is guaranteed to be in the tree.
     def delete(self,point:tuple[int]):
         if self.root is not None:
-            self._delete_helper(self.root, [], point)
+            self._delete_helper(self.root, [], point, None)
                
-    def _delete_helper(self, node: NodeLeaf | NodeInternal, pathNodes: list[NodeInternal], point:tuple[int]) -> NodeInternal:
-        sibling = None
+    def _delete_helper(self, node: NodeLeaf | NodeInternal, pathNodes: list[NodeInternal], point:tuple[int], sibling: NodeInternal | NodeLeaf) -> NodeInternal:
         while isinstance(node, NodeInternal):
             pathNodes.append(node)
             if point[node.splitindex] < node.splitvalue:
@@ -191,8 +190,8 @@ class KDtree():
                 sibling = node.leftchild
                 node = node.rightchild
             else:
-                self._delete_helper(node.leftchild, pathNodes.copy(), point)
-                self._delete_helper(node.rightchild, pathNodes.copy(), point)
+                self._delete_helper(node.leftchild, pathNodes.copy(), point, node.rightchild)
+                self._delete_helper(node.rightchild, pathNodes.copy(), point, node.leftchild)
                 return 
                 
         if isinstance(node, NodeLeaf):
@@ -267,7 +266,7 @@ class KDtree():
             elif node.rightchild is not None:
                 leaveschecked = self._visit_child(k, point, knnlist, knndistancelist, node.rightchild, leaveschecked)        
             return leaveschecked
-    
+        
     def _visit_child(self, k: int, point:tuple[int], knnlist: list, knndistancelist: list, child: NodeInternal | NodeLeaf, 
                     leaveschecked: int) -> int:
         if len(knnlist) < k:
@@ -362,4 +361,7 @@ kdTree.insert((16,16,12), "SAX")
 kdTree.insert((15,15,15), "SAX")
 kdTree.delete((18, 18, 0))
 kdTree.delete((17, 0, 2))
+
+kdTree2.delete((16, 19, 18))
 '''
+
