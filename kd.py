@@ -36,6 +36,11 @@ class NodeLeaf():
                   data : List[Datum]):
         self.data = data
 
+class DatumWithDistance():
+    def __init__(self, datum: Datum, distance: int):
+        self.datum = datum
+        self.distance = distance
+        
 # KD tree class.
 class KDtree():
     def  __init__(self,
@@ -220,40 +225,41 @@ class KDtree():
         # While recursing, count the number of leaf nodes visited while you construct the list.
         # The following lines should be replaced by code that does the job.
         leaveschecked = 0
+        knnlist1 = []
         knnlist = []
-        knndistancelist = []
         # The following return line can probably be left alone unless you make changes in variable names.
         
         # Find the closest leaf to the point
         if self.root is None:
             return ""
         else:
-            leaveschecked = self._knn_helper(k, point, knnlist, knndistancelist, self.root, 0)
-            knnlist.sort(key=functools.cmp_to_key(_compare_coords))
+            leaveschecked = self._knn_helper(k, point, knnlist1, self.root, 0)
+            knnlist1.sort(key=functools.cmp_to_key(_compare_distance))
             
+            for distanceDatum in knnlist1:
+                knnlist.append(distanceDatum.datum)
                 
         return(json.dumps({"leaveschecked":leaveschecked,"points":[datum.to_json() for datum in knnlist]},indent=2))
 
-    def _knn_helper(self, k: int, point:tuple[int], knnlist: list, knndistancelist: list, node: NodeInternal | NodeLeaf, 
+    def _knn_helper(self, k: int, point:tuple[int], knnlist: list[DatumWithDistance], node: NodeInternal | NodeLeaf, 
                     leaveschecked: int) -> int:
         if isinstance(node, NodeLeaf):
             for datapoint in node.data:
                 if len(knnlist) < k:
                     # If the list isn't full, add the point to knnList
-                    knnlist.append(datapoint)
-                    knndistancelist.append(distance_between_points(datapoint.coords, point))
+                    knnlist.append(DatumWithDistance(datapoint, distance_between_points(datapoint.coords, point)))
                 else:
                     # If the list is full, replace the furthest point if this one is closer
-                    largestPointIndex = self._find_largest_index(knndistancelist)
+                    largestPointIndex = self._find_largest_index(knnlist)
                     
                     tempdist = distance_between_points(datapoint.coords, point)
-                    if tempdist < knndistancelist[largestPointIndex]:
-                        knnlist[largestPointIndex] = datapoint
-                        knndistancelist[largestPointIndex] = tempdist
-                    elif tempdist == knndistancelist[largestPointIndex]:
-                        if datapoint.code < knnlist[largestPointIndex].code:
-                            knnlist[largestPointIndex] = datapoint
-                            knndistancelist[largestPointIndex] = tempdist
+                    if tempdist < knnlist[largestPointIndex].distance:
+                        knnlist[largestPointIndex].datum = datapoint
+                        knnlist[largestPointIndex].distance = tempdist
+                    elif tempdist == knnlist[largestPointIndex].distance:
+                        if datapoint.code < knnlist[largestPointIndex].datum.code:
+                            knnlist[largestPointIndex].datum = datapoint
+                            knnlist[largestPointIndex].distance = tempdist
                             
             return leaveschecked + 1
         else:
@@ -263,33 +269,33 @@ class KDtree():
                 rightboundingbox = self._get_bounding_box(node.rightchild)
                 
                 if self._distance_to_bounding_box(point, leftboundingbox) <= self._distance_to_bounding_box(point, rightboundingbox):
-                    leaveschecked = self._visit_child(k, point, knnlist, knndistancelist, node.leftchild, leaveschecked)
-                    leaveschecked = self._visit_child(k, point, knnlist, knndistancelist, node.rightchild, leaveschecked)
+                    leaveschecked = self._visit_child(k, point, knnlist, node.leftchild, leaveschecked)
+                    leaveschecked = self._visit_child(k, point, knnlist, node.rightchild, leaveschecked)
                 else:
-                    leaveschecked = self._visit_child(k, point, knnlist, knndistancelist, node.rightchild, leaveschecked)
-                    leaveschecked = self._visit_child(k, point, knnlist, knndistancelist, node.leftchild, leaveschecked)
+                    leaveschecked = self._visit_child(k, point, knnlist, node.rightchild, leaveschecked)
+                    leaveschecked = self._visit_child(k, point, knnlist, node.leftchild, leaveschecked)
             elif node.leftchild is not None:
-                leaveschecked = self._visit_child(k, point, knnlist, knndistancelist, node.leftchild, leaveschecked)
+                leaveschecked = self._visit_child(k, point, knnlist, node.leftchild, leaveschecked)
             elif node.rightchild is not None:
-                leaveschecked = self._visit_child(k, point, knnlist, knndistancelist, node.rightchild, leaveschecked)        
+                leaveschecked = self._visit_child(k, point, knnlist, node.rightchild, leaveschecked)        
             return leaveschecked
         
-    def _visit_child(self, k: int, point:tuple[int], knnlist: list, knndistancelist: list, child: NodeInternal | NodeLeaf, 
+    def _visit_child(self, k: int, point:tuple[int], knnlist: list[DatumWithDistance], child: NodeInternal | NodeLeaf, 
                     leaveschecked: int) -> int:
         if len(knnlist) < k:
-            leaveschecked = self._knn_helper(k, point, knnlist, knndistancelist, child, leaveschecked)
+            leaveschecked = self._knn_helper(k, point, knnlist, child, leaveschecked)
         else:
             boundingbox = self._get_bounding_box(child)
-            if self._distance_to_bounding_box(point, boundingbox) <= knndistancelist[self._find_largest_index(knndistancelist)]:
-                leaveschecked = self._knn_helper(k, point, knnlist, knndistancelist, child, leaveschecked)
+            if self._distance_to_bounding_box(point, boundingbox) <= knnlist[self._find_largest_index(knnlist)].distance:
+                leaveschecked = self._knn_helper(k, point, knnlist, child, leaveschecked)
         
         return leaveschecked
             
-    def _find_largest_index(self, distanceList: list):
+    def _find_largest_index(self, knnList: list[DatumWithDistance]):
         largestPointIndex = 0
-        for i in range(len(distanceList)):
-                        if distanceList[i] > distanceList[largestPointIndex]:
-                            largestPointIndex = i
+        for i in range(len(knnList)):
+             if knnList[i].distance > knnList[largestPointIndex].distance:
+                 largestPointIndex = i
         return largestPointIndex    
     
     # boundingbox: [[xmin, ymin, zmin], [xmax, ymax, zmax]]
@@ -353,6 +359,13 @@ def _compare_coords(datum1: Datum, datum2: Datum):
         elif datum1.coords[index] < datum2.coords[index]:
             return  -1
     return 0
+
+def _compare_distance(datum1: DatumWithDistance, datum2: DatumWithDistance):
+    if datum1.distance > datum2.distance:
+        return 1
+    elif datum1.distance < datum2.distance:
+        return -1
+    return 0
     
 '''
 kdTree = KDtree("spread", 3, 3)
@@ -371,5 +384,6 @@ kdTree.delete((17, 0, 2))
 
 kdTree2.delete((16, 19, 18))
 '''
+
 
 
