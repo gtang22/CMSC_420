@@ -229,6 +229,8 @@ class KDtree():
             return ""
         else:
             leaveschecked = self._knn_helper(k, point, knnlist, knndistancelist, self.root, 0)
+            knnlist.sort(key=functools.cmp_to_key(_compare_coords))
+            
                 
         return(json.dumps({"leaveschecked":leaveschecked,"points":[datum.to_json() for datum in knnlist]},indent=2))
 
