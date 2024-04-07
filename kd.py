@@ -302,9 +302,9 @@ class KDtree():
         maxlist = []
         
         for i in range(self.k):
-            minimum = min(box1[i][0], box2[i][0])
+            minimum = min(box1[0][i], box2[0][i])
             minlist.append(minimum)
-            maximum = max(box1[i][1], box2[i][1])
+            maximum = max(box1[1][i], box2[1][i])
             maxlist.append(maximum)
             
         return [minlist, maxlist]
@@ -364,4 +364,5 @@ kdTree.delete((17, 0, 2))
 
 kdTree2.delete((16, 19, 18))
 '''
+
 
