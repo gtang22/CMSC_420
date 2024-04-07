@@ -365,10 +365,5 @@ kdTree.delete((17, 0, 2))
 kdTree2.delete((16, 19, 18))
 '''
 
-kdTree2 = KDtree("spread", 2, 4)
-kdTree2.insert((8, 19), "ZTY")
-
-
-print(kdTree2.knn(1, (13, 1, 7, 6)))
 
 
