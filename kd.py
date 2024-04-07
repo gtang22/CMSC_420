@@ -248,6 +248,11 @@ class KDtree():
                     if tempdist < knndistancelist[largestPointIndex]:
                         knnlist[largestPointIndex] = datapoint
                         knndistancelist[largestPointIndex] = tempdist
+                    elif tempdist == knndistancelist[largestPointIndex]:
+                        if datapoint.code < knnlist[largestPointIndex].code:
+                            knnlist[largestPointIndex] = datapoint
+                            knndistancelist[largestPointIndex] = tempdist
+                            
             return leaveschecked + 1
         else:
             if node.leftchild is not None and node.rightchild is not None:
