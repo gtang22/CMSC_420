@@ -262,7 +262,7 @@ class KDtree():
                 leftboundingbox = self._get_bounding_box(node.leftchild)
                 rightboundingbox = self._get_bounding_box(node.rightchild)
                 
-                if self._distance_to_bounding_box(point, leftboundingbox) < self._distance_to_bounding_box(point, rightboundingbox):
+                if self._distance_to_bounding_box(point, leftboundingbox) <= self._distance_to_bounding_box(point, rightboundingbox):
                     leaveschecked = self._visit_child(k, point, knnlist, knndistancelist, node.leftchild, leaveschecked)
                     leaveschecked = self._visit_child(k, point, knnlist, knndistancelist, node.rightchild, leaveschecked)
                 else:
