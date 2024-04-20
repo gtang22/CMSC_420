@@ -97,6 +97,9 @@ class SkipList():
     def insert(self,key,value,toplevel):
         if (self.headnode is None):
             self.initialize(self.maxlevel)
+        
+        if (self.nodecount is None):    
+            self.nodecount = 0
             
         cur = self.headnode
         level = self.maxlevel
