@@ -153,27 +153,27 @@ class SkipList():
     def delete(self,key):
         # Find the Node with the key given
         cur = self.headnode
-        level = self.maxlevel
         prevPointers = []
-        
-        # Record pointers to the node 
-        for i in range(level):
-            cur = self.headnode
-            while(cur.pointers[i] is not None and cur.pointers[i].key != key):
-                cur = cur.pointers[i]
-            prevPointers.append(cur)
-        
+        level = self.maxlevel
         # Find node 
-        cur = self.headnode  
         while (cur.key != key and level >= 0):
             nextkey = cur.pointers[level].key
             if (nextkey > key):
                 level -= 1
             else:
                 cur = cur.pointers[level]
-                
+        
+        mylevel = cur.toplevel
+        
+        # Record pointers to the node 
+        for i in range(mylevel + 1):
+            current = self.headnode
+            while(current.pointers[i] is not None and current.pointers[i].key != key):
+                current = current.pointers[i]
+            prevPointers.append(current)
+        
         # Move pointers to ignore node      
-        for i in range(cur.toplevel):
+        for i in range(mylevel + 1):
             prevPointers[i].pointers[i] = cur.pointers[i]
         
         # Remove one from node count
