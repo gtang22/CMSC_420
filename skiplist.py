@@ -185,7 +185,7 @@ class SkipList():
     def search(self,key) -> str:
         A = []
         
-        cur = self.headnode.pointers
+        cur = self.headnode
         level = self.maxlevel
         
         # Go to find the value, if not exists, level will be -1
