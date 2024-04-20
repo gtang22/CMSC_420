@@ -173,7 +173,7 @@ class SkipList():
                 cur = cur.pointers[level]
                 
         # Move pointers to ignore node      
-        for i in range(cur.toplevel + 1):
+        for i in range(cur.toplevel):
             prevPointers[i].pointers[i] = cur.pointers[i]
         
         # Remove one from node count
