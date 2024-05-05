@@ -43,7 +43,8 @@ class Graph():
         if fvec[0] < 0:
             fvec = [ -x for x in fvec]
         # Return
-        return fvec
+        fvec = [round(x, 8) for x in fvec]
+        return fvec 
    
 
     # Cluster the nodes.
