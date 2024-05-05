@@ -38,8 +38,13 @@ class Graph():
         #print(eigenValues)
         eigenV = np.argsort(eigenValues)
         value = eigenV[1]
-
-        return eigenVector[ : , value]
+        fvec = eigenVector[ : , value]
+        
+        if fvec[0] < 0:
+            fvec = [ -x for x in fvec]
+        # Return
+        return fvec
+   
 
     # Cluster the nodes.
     # You should return a list of two lists.
