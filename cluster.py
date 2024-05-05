@@ -41,9 +41,8 @@ class Graph():
         fvec = eigenVector[ : , value]
         
         if fvec[0] < 0:
-            fvec = [ -x for x in fvec]
+            fvec = -1 * fvec
         # Return
-        fvec = [round(x, 8) for x in fvec]
         return fvec 
    
 
