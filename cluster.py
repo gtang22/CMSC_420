@@ -36,10 +36,8 @@ class Graph():
         eigenValues, eigenVector = np.linalg.eig(self.laplacian)
         value = 0
         #print(eigenValues)
-        
-        while round(eigenValues[value], 8) <= 0:
-            value += 1
-        #print(value)
+        eigenV = np.argsort(eigenValues)
+        value = eigenV[1]
 
         fvec = np.array([])
         for i in range(len(eigenVector[0])):
@@ -114,4 +112,3 @@ print(cluster.fiedlervector())
 
 
 '''
-
