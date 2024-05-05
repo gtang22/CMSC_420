@@ -35,8 +35,9 @@ class Graph():
         # Replace this next line with your code.
         eigenValues, eigenVector = np.linalg.eig(self.laplacian)
         value = 0
-        if eigenValues[0] == 0:
-            value = 1
+        
+        while eigenValues[value] == float(0):
+            value += 1
         
         fvec = []
         for i in range(len(eigenVector[0])):
