@@ -36,13 +36,15 @@ class Graph():
         eigenValues, eigenVector = np.linalg.eig(self.laplacian)
         value = 0
         
+        #print(eigenValues)
         
-        while eigenValues[value] <= 0:
+        while round(eigenValues[value], 8) <= 0:
             value += 1
+        #print(value)
 
         fvec = []
         for i in range(len(eigenVector[0])):
-            fvec.append(eigenVector[i][value])
+            fvec.append(round(eigenVector[i][value], 8))
             
         if fvec[0] < 0:
             fvec = [ -x for x in fvec]
@@ -111,27 +113,5 @@ cluster.addedge([6,8])
 cluster.addedge([7,9])
 print(cluster.fiedlervector())
 
-cluster  = Graph(10)
-cluster.addedge([0,4])
-cluster.addedge([0,5])
-cluster.addedge([0,6])
-cluster.addedge([0,7])
-cluster.addedge([1,6])
-cluster.addedge([1,7])
-cluster.addedge([1,9])
-cluster.addedge([2,6])
-cluster.addedge([2,7])
-cluster.addedge([2,9])
-cluster.addedge([3,4])
-cluster.addedge([3,5])
-cluster.addedge([3,8])
-cluster.addedge([4,5])
-cluster.addedge([4,8])
-cluster.addedge([5,6])
-cluster.addedge([5,7])
-cluster.addedge([6,7])
-cluster.addedge([6,9])
-cluster.addedge([7,9])
-print(cluster.fiedlervector())
-'''
 
+'''
