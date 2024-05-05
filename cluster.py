@@ -60,7 +60,7 @@ class Graph():
         list = self.fiedlervector()
         
         for i in range(len(list)):
-            if list[i] < 0:
+            if list[i] <= 0:
                 nind.append(i)
             else:
                 pind.append(i)
