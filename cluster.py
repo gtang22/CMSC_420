@@ -12,7 +12,7 @@ class Graph():
         # IMPORTANT!!!
         # Replace the next line so the Laplacian is a nodecount x nodecount array of zeros.
         # You will need to do this in order for the code to run!
-        self.laplacian = np.zeros((nodecount, nodecount), dtype = int)
+        self.laplacian = np.zeros((nodecount, nodecount), dtype = float)
 
     # Add an edge to the Laplacian matrix.
     # An edge is a pair [x,y].
@@ -61,9 +61,9 @@ class Graph():
         
         for i in range(len(list)):
             if list[i] < 0:
-                nind.append(list[i])
+                nind.append(i)
             else:
-                pind.append(list[i])
+                pind.append(i)
         
         # Return
         return([pind,nind])
@@ -83,3 +83,5 @@ print(cluster.fiedlervector())
 print("-------")
 print(cluster.clustersign())
 '''
+
+
